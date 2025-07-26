@@ -1,7 +1,10 @@
 """
-FCFS Scheduling Demonstration
-This demo shows First Come First Served scheduling with the same processes
-used in Round Robin demo for comparison.
+Enhanced FCFS Scheduling Demonstration
+This demo shows First Come First Served scheduling with enhanced features:
+- UUID process identification
+- Hex address translation
+- Real-time execution
+- Automatic memory cleanup
 """
 
 import sys
@@ -12,9 +15,10 @@ from core import Process, MemoryManager, CPUScheduler
 
 def main():
     print("="*60)
-    print("    FCFS SCHEDULING DEMONSTRATION")
+    print("    ENHANCED FCFS SCHEDULING DEMONSTRATION")
     print("    Process A: 20s burst time")
     print("    Process B: 17s burst time")
+    print("    Features: UUID IDs, Hex addresses, Real-time execution")
     print("="*60)
     
     # Reset Process ID counter
@@ -67,24 +71,37 @@ def main():
     print("Process A runs completely (20s), then Process B runs completely (17s)")
     print("Total expected time: 37s (no preemption, no context switches)")
     
-    # Run simulation
-    result = scheduler.run_complete_simulation(memory_manager)
+    # Set faster execution for demo (enhanced feature)
+    scheduler.set_execution_delay(0.2)  # 0.2 seconds per instruction for demo
     
-    print(f"\nSimulation Results:")
+    # Run enhanced simulation
+    result = scheduler.run_realtime_simulation(memory_manager)
+    
+    print(f"\nEnhanced Simulation Results:")
     print(f"Total execution time: {result['total_time']}s")
+    print(f"Real-time duration: {result['simulation_duration']:.2f}s")
     print(f"Context switches: {result['context_switches']}")
     print(f"Average waiting time: {result['average_waiting_time']:.2f}s")
     print(f"Average turnaround time: {result['average_turnaround_time']:.2f}s")
+    print(f"Memory hit ratio: {result['overall_hit_ratio']:.2f}%")
     
     print(f"\nExecution sequence analysis:")
     print(f"Process A executed {result['execution_order'].count('P0')} time units")
     print(f"Process B executed {result['execution_order'].count('P1')} time units")
+    
+    # Show hex execution sample
+    if result['hex_execution_log']:
+        print(f"\nHex Address Execution Sample:")
+        for i, log in enumerate(result['hex_execution_log'][:6]):
+            status_symbol = "✓" if log['status'] == 'HIT' else "⚠"
+            print(f"  [{log['time']:2d}s] {log['process']}: {log['hex_address']} → {log['physical_address']} {status_symbol}")
     
     print(f"\nComparison with Round Robin:")
     print(f"FCFS - Average waiting time: {result['average_waiting_time']:.2f}s")
     print(f"RR   - Average waiting time: 17.50s")
     print(f"FCFS - Context switches: {result['context_switches']}")
     print(f"RR   - Context switches: 11")
+    print(f"FCFS - Memory hit ratio: {result['overall_hit_ratio']:.2f}%")
     
     # Display memory status
     memory_manager.display_memory_status()
